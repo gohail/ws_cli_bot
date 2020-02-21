@@ -22,7 +22,7 @@ func (wc *WSClient) ConnectWSClient(host string, botId int) (err error) {
 		return err
 	}
 	wc.generateName(botId)
-	fmt.Printf(" WS-client connected! name: %s url: %s \n", wc.name, u.String())
+	fmt.Printf("WS-client connected! name: %s url: %s \n", wc.name, u.String())
 	return nil
 }
 
