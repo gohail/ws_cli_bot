@@ -17,6 +17,7 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/gohail/ws_cli_bot/config"
 	"github.com/spf13/cobra"
 	"os"
 
@@ -25,20 +26,18 @@ import (
 )
 
 var cfgFile string
+var conf config.AppConf
+
+const (
+	serverHost = "server.host"
+	serverPort = "server.port"
+)
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "ws_cli_bot",
-	Short: "A brief description of your application",
-	Long: `A longer description that spans multiple lines and likely contains
-examples and usage of using your application. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-	// Uncomment the following line if your bare application
-	// has an action associated with it:
-	//	Run: func(cmd *cobra.Command, args []string) { },
+	Short: "application for simulating users in the mafiosi project",
+	Long:  ``,
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
@@ -52,10 +51,6 @@ func Execute() {
 
 func init() {
 	cobra.OnInitialize(initConfig)
-
-	// Here you will define your flags and configuration settings.
-	// Cobra supports persistent flags, which, if defined here,
-	// will be global for your application.
 
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.ws_cli_bot.yaml)")
 
@@ -79,13 +74,23 @@ func initConfig() {
 
 		// Search config in home directory with name ".ws_cli_bot" (without extension).
 		viper.AddConfigPath(home)
-		viper.SetConfigName(".ws_cli_bot")
+		viper.SetConfigType("yaml")
+		viper.SetConfigName("ws_cli_bot")
 	}
 
 	viper.AutomaticEnv() // read in environment variables that match
 
+	viper.SetDefault(serverHost, "localhost")
+	viper.SetDefault(serverPort, 8080)
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err == nil {
 		fmt.Println("Using config file:", viper.ConfigFileUsed())
 	}
+
+	conf = config.AppConf{
+		Host: viper.GetString(serverHost),
+		Port: viper.GetInt(serverPort),
+	}
+
+	fmt.Printf("Config data: %s=%s, %s=%d\n", serverHost, conf.Host, serverPort, conf.Port)
 }
