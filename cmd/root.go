@@ -35,7 +35,7 @@ const (
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "ws_cli_bot",
+	Use:   "ws_bot",
 	Short: "application for simulating users in the mafiosi project",
 	Long:  ``,
 }
